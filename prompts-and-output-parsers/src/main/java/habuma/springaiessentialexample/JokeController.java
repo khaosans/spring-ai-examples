@@ -1,32 +1,30 @@
 package habuma.springaiessentialexample;
 
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ai.chat.ChatClient;
+import org.springframework.ai.chat.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class JokeController {
 
     private final ChatClient chatClient;
 
-    @Value("classpath:/joke-template.st")
-    private Resource jokeTemplate;
-
-    public JokeController(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder.build();
+    @Autowired
+    public JokeController(ChatClient chatClient) {
+        this.chatClient = chatClient;
     }
 
     @GetMapping("/joke")
-    public JokeResponse tellJoke(@RequestParam("subject") String subject) {
-        return chatClient.prompt()
-            .user(userSpec -> userSpec
-                .text(jokeTemplate)
-                .param("subject", subject))
-            .call()
-            .entity(JokeResponse.class);
+    public JokeResponse tellJoke(@RequestParam String subject) {
+        return new JokeResponse(subject, "This is a joke about " + subject);
     }
 
+    @GetMapping("/chat-completion")
+    public String chatCompletion(@RequestParam String input) {
+        Prompt prompt = new Prompt("tell me a joke about " + input);
+        ChatResponse response = chatClient.call(prompt);
+        return response.getResult().getOutput().getContent();
+    }
 }
