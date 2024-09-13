@@ -1,35 +1,38 @@
 package habuma.springaiessentialexample;
 
-import org.springframework.ai.chat.ChatClient;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.PromptTemplate;
+import habuma.springaiessentialexample.service.LangChain4JService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 @RestController
 public class JokeController {
 
-    private final PromptTemplate promptTemplate;
-    private final ChatClient chatClient;
+    private static final Logger logger = LoggerFactory.getLogger(JokeController.class);
+
+    private final LangChain4JService langChain4JService;
 
     @Autowired
-    public JokeController(PromptTemplate promptTemplate, ChatClient chatClient) {
-        this.promptTemplate = promptTemplate;
-        this.chatClient = chatClient;
+    public JokeController(LangChain4JService langChain4JService) {
+        this.langChain4JService = langChain4JService;
     }
 
     @GetMapping("/joke")
     public JokeResponse tellJoke(@RequestParam(name="subject", defaultValue="Spring") String subject) {
-        Prompt prompt = promptTemplate.create(Map.of("subject", subject));
-        String joke = chatClient.call(prompt).getResult().getOutput().getContent();
+        logger.debug("Generating joke about subject: {}", subject);
+        String joke = langChain4JService.generateJoke(subject);
+        logger.debug("Generated joke: {}", joke);
         return new JokeResponse(subject, joke);
     }
 
     @GetMapping("/chat-completion")
     public String chatCompletion(@RequestParam String input) {
-        Prompt prompt = new Prompt("Tell me a joke about " + input);
-        return chatClient.call(prompt).getResult().getOutput().getContent();
+        logger.debug("Performing chat completion with input: {}", input);
+        String response = langChain4JService.chatCompletion(input);
+        logger.debug("Chat completion response: {}", response);
+        return response;
     }
 }
