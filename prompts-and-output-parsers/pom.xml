@@ -15,41 +15,28 @@
     <description>prompts-and-output-parsers</description>
     <properties>
         <java.version>18</java.version>
-        <SPRING-AI-VERSION>0.8.0-SNAPSHOT</SPRING-AI-VERSION> <!-- Updated to latest snapshot version -->
+        <spring-ai.version>0.8.0-SNAPSHOT</spring-ai.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
-            <version>${SPRING-AI-VERSION}</version>
+            <version>${spring-ai.version}</version>
         </dependency>
-
-        <!-- Removed spring-ai-chat dependency as it might be included in the starter -->
-
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-core</artifactId>
-            <version>${SPRING-AI-VERSION}</version>
+            <version>${spring-ai.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-openai</artifactId>
-            <version>${SPRING-AI-VERSION}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-    
-        <!-- Removed javaee-websocket-gwt-rpc-sample dependency as it's not available -->
     </dependencies>
 
     <build>
@@ -63,17 +50,12 @@
 
     <repositories>
         <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
-        <repository>
             <id>spring-snapshots</id>
             <name>Spring Snapshots</name>
             <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </repository>
     </repositories>
 </project>
