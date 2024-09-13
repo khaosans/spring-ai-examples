@@ -1,10 +1,9 @@
 package habuma.springaiessentialexample.service;
 
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.memory.chat.TokenWindowChatMemory;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
-import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.service.AiServices;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,8 @@ public class LangChain4JService {
                 .modelName(modelName)
                 .timeout(Duration.ofSeconds(60))
                 .build();
-        this.chatMemory = TokenWindowChatMemory.builder()
-                .maxTokens(2000, new OpenAiTokenizer("gpt-3.5-turbo"))
+        this.chatMemory = MessageWindowChatMemory.builder()
+                .maxMessages(10)
                 .build();
     }
 
